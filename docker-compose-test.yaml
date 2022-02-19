@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+  messagingapptest:
+    image: 'maven:3'
+    stop_signal: SIGKILL
+    stdin_open: true
+    tty: true
+    working_dir: $PWD
+    volumes:
+     - $PWD:$PWD
+     - /var/run/docker.sock:/var/run/docker.sock
+    command: mvn test

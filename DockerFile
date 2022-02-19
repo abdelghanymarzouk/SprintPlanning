@@ -1,0 +1,14 @@
+FROM maven:3.8-jdk-11-slim AS MAVEN_BUILD
+COPY src ./home/app/src
+COPY pom.xml ./home/app
+COPY .openapi-generator-ignore ./home/app
+COPY .openapi-generator ./home/app
+RUN mvn -f /home/app/pom.xml clean package -Dmaven.test.skip=true
+FROM library/postgres
+COPY src/main/resources/changelog/changes/1-changelog.sql /docker-entrypoint-initdb.d/
+COPY src/main/resources/changelog/changes/2-changelog.sql /docker-entrypoint-initdb.d/
+FROM adoptopenjdk:11-jre-hotspot
+#COPY target/messaging-service-0.0.1-SNAPSHOT.jar /app.jar
+COPY --from=MAVEN_BUILD /home/app/target/messaging-service-0.0.1-SNAPSHOT.jar /app.jar
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","/app.jar"]

@@ -1,0 +1,504 @@
+openapi: 3.0.2
+info:
+  title: Sprint Planning Service
+  description: >-
+    Application to manage sprint and plan stories to each developer
+  contact:
+    name: Penguin
+    url: 'https://www.Penguin.com'
+    email: 'abdelghany.marzouk.91@gmail.com'
+  version: 0.0.1
+tags:
+  - name: Developer
+    description: Operations about developers
+  - name: Issue
+    description: Operations about stories , bugs
+  - name: Sprint Planning
+    description: Planning of Stories
+servers:
+  - url: '{protocol}://{server}:{port}/{basePath}'
+    description: Internal Server
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      server:
+        default: localhost
+      basePath:
+        default: api/sprint-planning-service
+      port:
+        enum:
+          - '80'
+          - '443'
+          - '8080'
+        default: '8080'
+paths:
+  /developer:
+    post:
+      tags:
+        - Developer
+      summary: "Add developer"
+      description: "Add developer"
+      operationId: "addDeveloper"
+      requestBody:
+        description: Developer object that needs to be added.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Developer"
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  developerId:
+                    type: string
+                    format: uuid
+    get:
+      tags:
+        - Developer
+      summary: Get All Developers
+      description: Get All Developers
+      operationId: getAllDevelopers
+      parameters:
+        - name: pageNumber
+          in: query
+          description: The page number of the records to retrieve. Default value is 1
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            minimum: 1
+            maximum: 2147483647
+        - name: pageSize
+          in: query
+          description: The max number of records to retrieve per page. Default value is 10, max value is 25.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            minimum: 1
+            maximum: 25
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Developers'
+        400:
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        500:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /developer/{developerId}:
+    put:
+      tags:
+        - Developer
+      summary: "Update developer name"
+      description: "Update developer"
+      operationId: "updateDeveloper"
+      parameters:
+        - name: developerId
+          in: path
+          description: developer that you want to delete.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Developer object that needs to be Updated.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Developer"
+      responses:
+        default:
+          description: "successful operation"
+    delete:
+      tags:
+        - Developer
+      summary: "Delete developer"
+      description: "Delete developer"
+      operationId: "deleteDeveloper"
+      parameters:
+        - name: developerId
+          in: path
+          description: developer that you want to delete.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: "successful operation"
+    get:
+      tags:
+        - Developer
+      summary: Get Developer by developer id
+      description: Get Developer by developer id
+      operationId: getSpecificDeveloper
+      parameters:
+        - name: developerId
+          in: path
+          description: Get Specific Developer
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Developer'
+        400:
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        500:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /story:
+    post:
+      tags:
+        - Issue
+      summary: "Add Story"
+      description: "Add Story"
+      operationId: "addStory"
+      requestBody:
+        description: Story object that needs to be added.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Story"
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  issueId:
+                    type: string
+                    format: uuid
+  /story/{issueId}:
+    put:
+      tags:
+        - Issue
+      summary: "Update story"
+      description: "Update story"
+      operationId: "updateStory"
+      parameters:
+        - name: issueId
+          in: path
+          description: issue(story/bug) that you want to delete.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Story object that needs to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Story"
+      responses:
+        default:
+          description: "successful operation"
+  /bug:
+    post:
+      tags:
+        - Issue
+      summary: "Add Bug"
+      description: "Add Bug"
+      operationId: "addBug"
+      requestBody:
+        description: Bug object that needs to be added.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Bug"
+      responses:
+        default:
+          description: Success
+          content:
+            application/json:
+              schema:
+                properties:
+                  issueId:
+                    type: string
+                    format: uuid
+  /bug/{issueId}:
+    put:
+      tags:
+        - Issue
+      summary: "Update Bug"
+      description: "Update Bug"
+      operationId: "updateBug"
+      parameters:
+        - name: issueId
+          in: path
+          description: issue(story/bug) that you want to delete.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        description: Bug object that needs to be added.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Bug"
+      responses:
+        default:
+          description: "successful operation"
+  /deleteIssue/{issueId}:
+    delete:
+      tags:
+        - Issue
+      summary: "Delete story/bug by issue id"
+      description: "Delete story/bug by issue id"
+      operationId: "deleteIssue"
+      parameters:
+        - name: issueId
+          in: path
+          description: issue(story/bug) that you want to delete.
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        default:
+          description: "successful operation"
+  /getAllIssues:
+    get:
+      tags:
+        - Issue
+      summary: Get All Issues (Bugs/Stories)
+      description: Get All Issues
+      operationId: getAllIssues
+      parameters:
+        - name: pageNumber
+          in: query
+          description: The page number of the records to retrieve. Default value is 1
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            minimum: 1
+            maximum: 2147483647
+        - name: pageSize
+          in: query
+          description: The max number of records to retrieve per page. Default value is 10, max value is 25.
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+            minimum: 1
+            maximum: 25
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Issues'
+        400:
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        500:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+  /plan:
+    get:
+      tags:
+        - Sprint Planning
+      summary: Get Plan of stories
+      description: Get Plan of stories
+      operationId: plan
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Plan'
+        400:
+          description: Bad Request
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        500:
+          description: Internal Server Error
+          content:
+            application/problem+json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+components:
+  schemas:
+    Developers:
+      type: object
+      properties:
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        developers:
+          type: array
+          items:
+            $ref: "#/components/schemas/Developer"
+    Developer:
+      type: object
+      properties:
+        name:
+          type: string
+          description: developer name.
+        developerId:
+          type: string
+          format: uuid
+          readOnly: true
+    Issues:
+      type: object
+      properties:
+        pagination:
+          $ref: "#/components/schemas/Pagination"
+        issues:
+          type: array
+          items:
+            $ref: "#/components/schemas/Issue"
+    Issue:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Title of the issue.
+        issueId:
+          type: string
+          format: uuid
+          readOnly: true
+        description:
+          type: string
+          description: Issue description.
+        creationDate:
+          type: string
+          format: date-time
+        developerId:
+          type: string
+          format: uuid
+    Story:
+      type: object
+      properties:
+        issueDetails:
+          $ref: "#/components/schemas/Issue"
+        estimatedPoint:
+          type: integer
+          description: Estimated point value for the story.
+        status:
+          $ref: "#/components/schemas/Status"
+    Bug:
+      type: object
+      properties:
+        issueDetails:
+          $ref: "#/components/schemas/Issue"
+        priority:
+          $ref: "#/components/schemas/Priority"
+        status:
+          $ref: "#/components/schemas/Status"
+    Plan:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          $ref: "#/components/schemas/Story"
+    Status:
+      type: string
+      enum:
+        - NEW
+        - ESTIMATED
+        - COMPLETED
+        - VERIFIED
+        - RESOLVED
+    Priority:
+      type: string
+      enum:
+        - CRITICAL
+        - MAJOR
+        - MINOR
+    Pagination:
+      type: object
+      properties:
+        pageNumber:
+          type: integer
+          description: The current page number.
+        pageSize:
+          type: integer
+          description: The max number of records that can be retrieved on this page.
+        total:
+          type: integer
+          description: The total number of records.
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the problem type.  When dereferenced,
+            it SHOULD provide human-readable documentation for the problem type
+            (e.g., using HTML).
+          default: 'about:blank'
+        title:
+          type: string
+          description: |
+            A short, summary of the problem type. Written in english and readable
+            for engineers (usually not suited for non-technical stakeholders and
+            not localized); example: Service Unavailable
+        status:
+          type: integer
+          format: int32
+          description: |
+            The HTTP status code generated by the origin server for this occurrence
+            of the problem.
+          minimum: 100
+          maximum: 600
+          exclusiveMaximum: true
+          example: 500
+        detail:
+          type: string
+          description: |
+            A human readable explanation specific to this occurrence of the
+            problem.
+          example: Connection to database timed out
+        instance:
+          type: string
+          format: uri
+          description: |
+            An absolute URI that identifies the specific occurrence of the problem.
+            It may or may not yield further information if dereferenced.
