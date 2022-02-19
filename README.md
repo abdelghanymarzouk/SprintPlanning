@@ -2,7 +2,7 @@
 
 #### Goal
 
-The Goal is to implement an application to help the tem to plan thier stories.
+The Goal is to implement an application to help the team to plan thier stories.
 #### Description
 
 My used algorithm to plan the stories:
